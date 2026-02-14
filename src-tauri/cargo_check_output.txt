@@ -1,0 +1,85 @@
+cargo :     Checking 
+quiz-app v0.1.0 (C:\U
+sers\1\Github_clone\Q
+uizz_me\src-tauri)
+Au caractère Ligne:1 
+: 1
++ cargo check 2>&1 | 
+Out-String | 
+Set-Content -Path 
+"cargo_check_output 
+...
++ ~~~~~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (    Che   
+ cking qu...z_me\    
+src-tauri):Strin    
+g) [], RemoteExc    
+eption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+error[E0382]: borrow 
+of moved value: `res`
+   --> 
+src\lib.rs:89:55
+    |
+ 80 |     let res = 
+client.post(url)
+    |         --- 
+move occurs because 
+`res` has type 
+`reqwest::Response`, 
+which does not 
+implement the `Copy` 
+trait
+...
+ 88 |         let 
+error_text = res.text
+().await.unwrap_or_el
+se(|_| "Unknown 
+error".to_string());
+    |                
+              ------ 
+`res` moved due to 
+this method call
+ 89 |         return 
+Err(format!("Groq 
+API Error ({}): {}", 
+res.status(), 
+error_text));
+    |                
+                     
+                  
+^^^ value borrowed 
+here after move
+    |
+note: `reqwest::Respo
+nse::text` takes 
+ownership of the 
+receiver `self`, 
+which moves `res`
+   --> C:\Users\1\.ca
+rgo\registry\src\inde
+x.crates.io-1949cf8c6
+b5b557f\reqwest-0.11.
+27\src\async_impl\res
+ponse.rs:147:23
+    |
+147 |     pub async 
+fn text(self) -> crat
+e::Result<String> {
+    |                
+       ^^^^
+
+For more information 
+about this error, 
+try `rustc --explain 
+E0382`.
+error: could not 
+compile `quiz-app` 
+(lib) due to 1 
+previous error
+
