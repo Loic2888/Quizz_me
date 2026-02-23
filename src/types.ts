@@ -6,6 +6,7 @@ export interface Choice {
 export interface Question {
     text: string;
     choices: Choice[];
+    explanation: string;
 }
 
 export interface QuizData {

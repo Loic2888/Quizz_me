@@ -17,6 +17,7 @@ struct Choice {
 struct Question {
     text: String,
     choices: Vec<Choice>,
+    explanation: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -52,12 +53,27 @@ async fn generate_quiz(subject: String, difficulty: String) -> Result<String, St
     let api_key = api_key_raw.trim();
     let url = "https://api.groq.com/openai/v1/chat/completions";
 
+    let (choice_count, difficulty_instruction, distractor_instruction) = match difficulty.to_lowercase().as_str() {
+        "hell" => (
+            4,
+            "extremely obscure, nearly impossible, and cruel technical questions designed for top-tier world experts. Focus on edge cases, historical minutiae, and deep advanced concepts.",
+            "Each wrong choice (distractor) must be extremely plausible, technically accurate in a slightly different context, and specifically designed to mislead experts."
+        ),
+        "hardcore" => (
+            3,
+            "highly technical and challenging questions for experienced professionals.",
+            "Wrong choices must be highly plausible and share technical similarities with the correct answer to prevent easy elimination."
+        ),
+        _ => (3, &difficulty as &str, "Ensure wrong choices are distinct from the correct one.")
+    };
+
     let prompt = format!(
         "Generate a {} quiz about '{}' with exactly 10 questions. \
-        Each question must have 3 choices, one correct and two wrong. \
+        Each question must have exactly {} choices (one correct, others wrong). {} \
+        Each question must include a detailed explanation of why the correct answer is right. \
         Return STRICT JSON in the following format: \
-        {{ \"subject\": \"{}\", \"difficulty\": \"{}\", \"questions\": [ {{ \"text\": \"Question text\", \"choices\": [ {{ \"text\": \"Answer 1\", \"is_correct\": true }}, {{ \"text\": \"Answer 2\", \"is_correct\": false }}, {{ \"text\": \"Answer 3\", \"is_correct\": false }} ] }} ] }}",
-        difficulty, subject, subject, difficulty
+        {{ \"subject\": \"{}\", \"difficulty\": \"{}\", \"questions\": [ {{ \"text\": \"Question text\", \"choices\": [ {{ \"text\": \"Answer 1\", \"is_correct\": true }}, {{ \"text\": \"Answer 2\", \"is_correct\": false }} ], \"explanation\": \"Simple explanation\" }} ] }}",
+        difficulty_instruction, subject, choice_count, distractor_instruction, subject, difficulty
     );
 
     let request_body = GroqRequest {

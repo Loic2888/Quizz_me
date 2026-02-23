@@ -15,9 +15,11 @@ function App() {
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [isAnswered, setIsAnswered] = useState(false);
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const difficulties = ["Easy", "Good", "Hardcore"];
+  const difficulties = ["Easy", "Good", "Hardcore", "Hell"];
 
   const handleStart = async () => {
     if (!subject.trim()) {
@@ -46,10 +48,20 @@ function App() {
     }
   };
 
-  const handleAnswer = (isCorrect: boolean) => {
+  const handleAnswer = (isCorrect: boolean, index: number) => {
+    if (isAnswered) return;
+
+    setSelectedAnswerIndex(index);
+    setIsAnswered(true);
+
     if (isCorrect) {
       setScore(s => s + 1);
     }
+  };
+
+  const handleNextQuestion = () => {
+    setIsAnswered(false);
+    setSelectedAnswerIndex(null);
 
     if (quizData && currentQuestionIndex < quizData.questions.length - 1) {
       setCurrentQuestionIndex(i => i + 1);
@@ -88,19 +100,29 @@ function App() {
 
             <div>
               <label className="block text-gray-400 mb-2 font-bold tracking-wide">DIFFICULTY</label>
-              <div className="grid grid-cols-3 gap-2">
-                {difficulties.map(diff => (
-                  <button
-                    key={diff}
-                    onClick={() => setDifficulty(diff)}
-                    className={`p-3 rounded font-bold transition-all border ${difficulty === diff
-                        ? 'bg-neon-orange text-black border-neon-orange shadow-[0_0_15px_rgba(255,158,11,0.5)]'
-                        : 'bg-dark-secondary text-gray-400 border-gray-700 hover:border-gray-500'
-                      }`}
-                  >
-                    {diff}
-                  </button>
-                ))}
+              <div className="grid grid-cols-2 gap-2">
+                {difficulties.map(diff => {
+                  let activeClass = "";
+                  if (difficulty === diff) {
+                    if (diff === "Hell") {
+                      activeClass = "bg-red-700 text-white border-red-500 shadow-[0_0_20px_rgba(220,38,38,0.8)] animate-pulse";
+                    } else {
+                      activeClass = "bg-neon-orange text-black border-neon-orange shadow-[0_0_15px_rgba(255,158,11,0.5)]";
+                    }
+                  } else {
+                    activeClass = "bg-dark-secondary text-gray-400 border-gray-700 hover:border-gray-500";
+                  }
+
+                  return (
+                    <button
+                      key={diff}
+                      onClick={() => setDifficulty(diff)}
+                      className={`p-3 rounded font-black transition-all border ${activeClass}`}
+                    >
+                      {diff === "Hell" ? "🔥 HELL" : diff.toUpperCase()}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -133,11 +155,22 @@ function App() {
             currentQuestion={currentQuestionIndex + 1}
             totalQuestions={quizData.questions.length}
           />
-          <div className="flex-grow flex items-center justify-center">
+          <div className="flex-grow flex flex-col items-center justify-center p-4">
             <Quiz
               question={quizData.questions[currentQuestionIndex]}
               onAnswer={handleAnswer}
+              isAnswered={isAnswered}
+              selectedAnswerIndex={selectedAnswerIndex}
             />
+
+            {isAnswered && (
+              <button
+                onClick={handleNextQuestion}
+                className="mt-8 px-12 py-4 bg-neon-orange text-black font-black text-xl rounded-full hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,158,11,0.4)] animate-bounce"
+              >
+                {currentQuestionIndex < quizData.questions.length - 1 ? 'CONTINUE' : 'SEE RESULTS'}
+              </button>
+            )}
           </div>
         </div>
       )}
