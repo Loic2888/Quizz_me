@@ -1,78 +1,118 @@
-# QUIZZ_ME
+# QUIZZ_ME - AI-Powered Intelligence Quizzer
 
-QUIZZ_ME is an AI-powered desktop application designed to facilitate learning through interactive quizzes. By leveraging artificial intelligence, it can generate quizzes on any subject you provide, making it a powerful tool for students, hobbyists, or anyone looking to test their knowledge.
+**QUIZZ_ME** is a high-performance desktop application designed for interactive learning and knowledge testing. Leveraging the **Groq API** with **Llama 3**, it generates dynamic quizzes on any subject instantly. Built with **Tauri**, **Rust**, and **React**, it offers a lightweight, secure, and premium user experience.
+
+## Summary
+- [Description](#description)
+- [Features](#features)
+- [Difficulty Levels](#difficulty-levels)
+- [AI Engine (Groq Integration)](#ai-engine-groq-integration)
+- [Structure-Project](#structure-project)
+- [Installation](#installation)
+- [Technologies used](#technologies-used)
+- [Authors](#authors)
+
+---
+
+## Description
+QUIZZ_ME transforms any topic into a structured learning experience. Whether you're studying for an exam or just testing your general culture, the app generates 10 tailored questions with detailed feedback. By utilizing a Rust-based backend (Tauri), all API interactions and local data management are handled with maximum efficiency and security.
+
+The application features a sleek, neon-inspired dark theme that prioritizes focus and visual excellence.
+
+---
 
 ## Features
+* **Dynamic Generation**: Instant quiz creation on any subject via Llama 3.
+* **Intelligent Explanations**: Every answer (correct or incorrect) is followed by a pedagogical explanation.
+* **Advanced Difficulty Logic**: Heuristics-driven prompt engineering to scale difficulty from "Easy" to "Hell".
+* **Cross-Platform**: Lightweight desktop execution thanks to the Tauri framework.
+* **Auto-Saving**: Quizzes are automatically saved locally for future reference.
 
-- **Dynamic Quiz Generation**: Powered by the Groq API (using Llama 3), generate quizzes on any topic instantly.
-- **Difficulty Levels**: Choose between Easy, Good, and Hardcore to match your learning pace.
-- **Modern Aesthetic**: A sleek, neon-inspired dark theme designed for a premium user experience.
-- **Cross-Platform**: Built with Tauri for a lightweight and fast desktop application.
+---
 
-## Tech Stack
+## Difficulty Levels
+The app features four distinct difficulty levels designed to challenge everyone from beginners to world-class experts.
 
-- **Frontend**: React 19, TypeScript, Vite
-- **Styling**: Tailwind CSS
-- **Backend/Desktop Layer**: Tauri (Rust)
-- **AI Integration**: Groq API (gsk-...)
+| Mode | Target Audience | Logic |
+| --- | --- | --- |
+| **Easy** | Beginners | Basic concepts and straightforward questions. |
+| **Good** | Intermediate | Standard knowledge with common terminology. |
+| **Hardcore** | Professionals | Technical questions with highly plausible distractors. |
+| **🔥 HELL** | World Experts | Extreme obscurity, 4 choices, and "cruel" technical nuances. |
+
+---
+
+## AI Engine (Groq Integration)
+The "brain" of QUIZZ_ME is powered by the **Groq Llama-3-70b** model, chosen for its exceptional inference speed and technical accuracy.
+
+* **Contextual Inference**: The prompt adapts dynamically to the chosen subject and level.
+* **Strict JSON Output**: The Rust backend enforces schema validation to ensure quiz stability.
+* **Distractor Refinement**: In higher difficulties, the AI is explicitly tasked with creating "evil" incorrect answers that mislead even experienced users.
+
+---
+
+## Structure-project
+```
+Quizz_me/
+├── .env                # Groq API Configuration
+├── data/               # Local quiz persistence (JSON)
+├── src/                # Frontend (React 19 + TypeScript)
+│   ├── components/     # Modular UI (HUD, Quiz, Result)
+│   ├── App.tsx         # State management & Game loop
+│   └── types.ts        # Shared interfaces
+└── src-tauri/          # Backend (Rust)
+    ├── src/            # API integration & File I/O
+    └── tauri.conf.json # Desktop configuration
+```
+
+---
 
 ## Installation
 
-To get started with the development environment:
+### 1. Prerequisites
+* **Operating System**: Windows, macOS, or Linux.
+* **Environment**: [Rust stable](https://www.rust-lang.org/), [Node.js LTS](https://nodejs.org/).
 
-1. **Clone the repository**:
-   ```bash
-   git clone [repository-url]
-   cd Quizz_me
-   ```
+### 2. Setup Procedure
+Clone the repository:
+```bash
+git clone https://github.com/Loic2888/Quizz_me.git
+cd Quizz_me
+```
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+Install dependencies:
+```bash
+npm install
+```
 
-3. **Configure API Key**:
-   Create a `.env` file in the root directory and add your Groq API key:
-   ```env
-   GROQ_API_KEY=your_api_key_here
-   ```
+### 3. API Configuration
+Create a `.env` file in the root directory:
+```env
+GROQ_API_KEY=your_groq_api_key_here
+```
 
-## Running the Application
-
-### Development Mode
-
-To launch the application in development mode with hot-reloading:
-
+### 4. Launch
+Start the application in development mode:
 ```bash
 npm run tauri dev
 ```
 
-### Building for Production
+---
 
-To create a production-ready installer:
+## Technologies Used
+<div align="left">
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-original.svg" height="40" alt="rust logo" />
+  <img width="12" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" height="40" alt="typescript logo" />
+  <img width="12" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" height="40" alt="react logo" />
+  <img width="12" />
+  <img src="https://raw.githubusercontent.com/tauri-apps/tauri/dev/app-icon.png" height="40" alt="tauri logo" />
+  <img width="12" />
+  <img src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" height="40" alt="tailwind logo" />
+</div>
 
-```bash
-npm run tauri build
-```
+---
 
-## Architecture & Code Style
-
-### Project Structure
-
-- `src/`: Contains the React frontend logic and components.
-  - `components/`: Modular UI components (HUD, Quiz, Result).
-  - `App.tsx`: Main application state management and routing.
-- `src-tauri/`: Contains the Rust backend logic, responsible for secure API calls and system integrations.
-
-### Coding Philosophy
-
-The project follows modern best practices:
-
-- **Type Safety**: TypeScript is used throughout the project to ensure robust code and catch errors early.
-- **Functional Components**: React functional components with Hooks (useState, useEffect) are used for clean and maintainability.
-- **Aesthetic First**: A custom design system was implemented using Tailwind CSS to provide a unique, "cyberpunk" style that stands out from generic applications.
-- **Separation of Concerns**: UI logic is kept in React, while sensitive operations (like API calls and file saving) are handled by the Rust backend for security and performance.
-
-## License
-
-[MIT](LICENSE)
+## Authors
+- [**Loïc Cerqueira**](https://github.com/Loic2888)
